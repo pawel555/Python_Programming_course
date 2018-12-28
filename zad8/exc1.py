@@ -49,9 +49,13 @@ class ImportButton(QWidget):
     def upload_image(self):
         name = QFileDialog.getOpenFileName(self, 'Open file')
         pic_lbl.setPixmap(PyQt5.QtGui.QPixmap(name[0]))
+        lbl3.setPixmap(PyQt5.QtGui.QPixmap(name[0]))
+        lbl3.setFixedWidth(50)
+        lbl3.setFixedHeight(50)
         global file_shown
         file_shown = name[0]
 
+# TODO wpisywanie sciezki z palca
 
 app = QApplication(sys.argv)
 
@@ -59,7 +63,7 @@ lay = QGridLayout()
 
 lbl = ImportButton(lay)
 
-lbl2 = QLabel("no file chosen")
+lbl2 = QLabel("to wpisz sciezke")
 # lbl2 = QFileDialog()
 lay.addWidget(lbl2, 0, 2, 1, 4)
 

@@ -1,29 +1,32 @@
-import sys
-from PyQt5.QtWidgets import *
+import vtk
 
+filename = "files/Part_1.stl"
 
-def cmd_exit():
-    app.quit()
+reader = vtk.vtkSTLReader()
+reader.SetFileName(filename)
 
-app = QApplication(sys.argv)
+mapper = vtk.vtkPolyDataMapper()
+if vtk.VTK_MAJOR_VERSION <= 5:
+    mapper.SetInput(reader.GetOutput())
+else:
+    mapper.SetInputConnection(reader.GetOutputPort())
 
-lay = QHBoxLayout()
+actor = vtk.vtkActor()
+actor.SetMapper(mapper)
 
-lbl = QLabel("Select file to show:")
-lay.addWidget(lbl)
+# Create a rendering window and renderer
+ren = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren)
 
-btn = QPushButton("Save As")
-lay.addWidget(btn)
+# Create a renderwindowinteractor
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
 
-btn2 = QPushButton("Quit")
-btn2.clicked.connect(cmd_exit)
-lay.addWidget(btn2)
+# Assign actor to the renderer
+ren.AddActor(actor)
 
-lay.addStretch()
-
-w = QWidget()
-w.move(0, 0)
-w.setLayout(lay)
-w.show()
-
-app.exec_()
+# Enable user interface interactor
+iren.Initialize()
+renWin.Render()
+iren.Start()
